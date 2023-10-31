@@ -476,6 +476,28 @@ class VoiceBpeTokenizer:
                 self.preprocess = preprocess
 
             self.tokenizer = Tokenizer.from_file(vocab_file)
+    
+    def check_input_length(self, txt, lang):
+        char_limits = {
+            "en": 250,
+            "de": 198,
+            "fr": 226,
+            "es": 206,
+            "it": 177,
+            "pt": 166,
+            "pl": 148,
+            "zh-cn": 65,
+            "ar": 115,
+            "cs": 145,
+            "ru": 139,
+            "nl": 162,
+            "tr": 182,
+            "ja": 60
+        }
+        limit = char_limits.get(lang, 250)
+
+        if len(txt) > limit:
+            print(f"[!] Warning: The text length exceeds the character limit of {limit} for language '{lang}', this might cause truncated audio.")
 
     def preprocess_text(self, txt, lang):
         if lang in ["en", "es", "fr", "de", "pt", "it", "pl", "ar", "cs", "ru", "nl", "tr", "zh-cn"]:
@@ -492,6 +514,7 @@ class VoiceBpeTokenizer:
         return txt
 
     def encode(self, txt, lang):
+        self.check_input_length(txt, lang)
         if self.preprocess:
             txt = self.preprocess_text(txt, lang)
         txt = f"[{lang}]{txt}"
