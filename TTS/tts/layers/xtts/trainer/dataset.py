@@ -109,7 +109,7 @@ class XTTSDataset(torch.utils.data.Dataset):
             try:
                 tseq, _, wav, _, _, _ = self.load_item(sample)
             except:
-                pass
+                continue
             # Basically, this audio file is nonexistent or too long to be supported by the dataset.
             if (
                 wav is None
